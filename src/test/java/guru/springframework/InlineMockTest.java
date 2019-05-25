@@ -1,4 +1,4 @@
-package guru.springframework.sfgpetclinic;
+package guru.springframework;
 
 import static org.mockito.Mockito.mock;
 
