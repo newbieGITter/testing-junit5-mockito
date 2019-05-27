@@ -1,7 +1,10 @@
 package guru.springframework.sfgpetclinic.services.springdatajpa;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +26,27 @@ public class SpecialitySDJpaServiceTest {
 	private SpecialtyRepository specialtyRepo;
 	
 	@Test
+	public void testFindById() {
+		Speciality speciality = new Speciality();
+		
+		Mockito.when(specialtyRepo.findById(1l)).thenReturn(Optional.of(speciality));
+		
+		Speciality specialityValue = service.findById(1l);
+		
+		assertThat(specialityValue).isNotNull();
+		Mockito.verify(specialtyRepo, times(1)).findById(Mockito.anyLong());
+	}
+	
+	@Test
+	public void testDeleteByObject() {
+		Speciality speciality = new Speciality();
+		
+		service.delete(speciality);
+		
+		Mockito.verify(specialtyRepo).delete(Mockito.any(Speciality.class));
+	}
+	
+	@Test
 	public void testDelete() {
 		Speciality speciality = new Speciality();
 		service.delete(speciality);
@@ -39,7 +63,7 @@ public class SpecialitySDJpaServiceTest {
 		
 		Mockito.verify(specialtyRepo, times(2)).deleteById(1L);
 		Mockito.verify(specialtyRepo, Mockito.atMost(3)).deleteById(1L);
-		Mockito.verify(specialtyRepo,  times(0)).delete(new Speciality());
+		Mockito.verify(specialtyRepo,  times(0)).delete(Mockito.any(Speciality.class));
 	}
 
 }
