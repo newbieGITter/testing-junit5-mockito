@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -38,12 +39,29 @@ public class SpecialitySDJpaServiceTest {
 	}
 	
 	@Test
+	public void testFindByIdBddTest() {
+		Speciality speciality = new Speciality();
+		
+		//Mockito.when(specialtyRepo.findById(1l)).thenReturn(Optional.of(speciality));
+		BDDMockito.given(specialtyRepo.findById(1L)).willReturn(Optional.of(speciality));
+		
+		
+		Speciality specialityValue = service.findById(1l);
+		
+		assertThat(specialityValue).isNotNull();
+		//Mockito.verify(specialtyRepo, times(1)).findById(Mockito.anyLong());
+		BDDMockito.then(specialtyRepo).should(times(1)).findById(Mockito.anyLong());
+		BDDMockito.then(specialtyRepo).shouldHaveNoMoreInteractions();
+	}
+	
+	@Test
 	public void testDeleteByObject() {
 		Speciality speciality = new Speciality();
 		
 		service.delete(speciality);
 		
-		Mockito.verify(specialtyRepo).delete(Mockito.any(Speciality.class));
+		//Mockito.verify(specialtyRepo).delete(Mockito.any(Speciality.class));
+		BDDMockito.then(specialtyRepo).should(times(1)).delete(Mockito.any(Speciality.class));
 	}
 	
 	@Test
