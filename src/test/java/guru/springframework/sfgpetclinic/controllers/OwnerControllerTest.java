@@ -3,11 +3,15 @@ package guru.springframework.sfgpetclinic.controllers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,9 +34,44 @@ class OwnerControllerTest {
 	
 	@Mock
 	private OwnerService ownerService;
+	
+	@Captor
+	ArgumentCaptor<String> captor;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
+	}
+	
+	@Test
+	public void processFindFormWildcardString_withAnnotations() {
+		// Given
+		Owner owner = owner();
+		List<Owner> owners = new ArrayList<>();
+		//final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		BDDMockito.given(ownerService.findAllByLastNameLike(captor.capture())).willReturn(owners);
+		
+		// When
+		String viewName = controller.processFindForm(owner, result, null);
+		
+		// then
+		assertThat("%" + owner.getLastName() + "%").isEqualToIgnoringCase(captor.getValue());
+		
+	}
+	
+	@Test
+	public void processFindFormWildcardString() {
+		// Given
+		Owner owner = owner();
+		List<Owner> owners = new ArrayList<>();
+		final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+		BDDMockito.given(ownerService.findAllByLastNameLike(captor.capture())).willReturn(owners);
+		
+		// When
+		String viewName = controller.processFindForm(owner, result, null);
+		
+		// then
+		assertThat("%" + owner.getLastName() + "%").isEqualToIgnoringCase(captor.getValue());
+		
 	}
 
 	@Test
