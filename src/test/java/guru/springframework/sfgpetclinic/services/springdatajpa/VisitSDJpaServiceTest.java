@@ -10,6 +10,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -33,12 +34,15 @@ public class VisitSDJpaServiceTest {
 		Set<Visit> visits = new HashSet<>();
 		visits.add(visit);
 		
-		Mockito.when(visitRepo.findAll()).thenReturn(visits);
+		// Given
+		//Mockito.when(visitRepo.findAll()).thenReturn(visits);
+		BDDMockito.given(visitRepo.findAll()).willReturn(visits);
 		
 		Set<Visit> returnedSetOfVisits = service.findAll();
 		
-		Mockito.verify(visitRepo, times(1)).findAll();
 		Assertions.assertEquals(returnedSetOfVisits.size(), 1L);;
+		//Mockito.verify(visitRepo, times(1)).findAll();
+		BDDMockito.then(visitRepo).should(times(1)).findAll();
 	}
 	
 	@Test

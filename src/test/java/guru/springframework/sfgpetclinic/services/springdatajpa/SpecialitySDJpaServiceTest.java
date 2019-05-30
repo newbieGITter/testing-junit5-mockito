@@ -42,12 +42,14 @@ public class SpecialitySDJpaServiceTest {
 	public void testFindByIdBddTest() {
 		Speciality speciality = new Speciality();
 		
+		// Given
 		//Mockito.when(specialtyRepo.findById(1l)).thenReturn(Optional.of(speciality));
 		BDDMockito.given(specialtyRepo.findById(1L)).willReturn(Optional.of(speciality));
 		
-		
+		// When
 		Speciality specialityValue = service.findById(1l);
 		
+		// Then
 		assertThat(specialityValue).isNotNull();
 		//Mockito.verify(specialtyRepo, times(1)).findById(Mockito.anyLong());
 		BDDMockito.then(specialtyRepo).should(times(1)).findById(Mockito.anyLong());
@@ -56,32 +58,45 @@ public class SpecialitySDJpaServiceTest {
 	
 	@Test
 	public void testDeleteByObject() {
+		// Given
 		Speciality speciality = new Speciality();
 		
+		// When
 		service.delete(speciality);
 		
+		// Then
 		//Mockito.verify(specialtyRepo).delete(Mockito.any(Speciality.class));
 		BDDMockito.then(specialtyRepo).should(times(1)).delete(Mockito.any(Speciality.class));
 	}
 	
 	@Test
 	public void testDelete() {
+		// Given
 		Speciality speciality = new Speciality();
+		
+		// When
 		service.delete(speciality);
 		
+		// Then
 		//Mockito.verify(specialtyRepo).delete(speciality);
-		Mockito.verify(specialtyRepo, atLeastOnce()).delete(speciality);
+		// Mockito.verify(specialtyRepo, atLeastOnce()).delete(speciality);
+		BDDMockito.then(specialtyRepo).should(times(1)).delete(speciality);
 		
 	}
 
 	@Test
 	public void testDeleteById() {
+		
+		// When
 		service.deleteById(1L);
 		service.deleteById(1L);
 		
+		// Then		
 		Mockito.verify(specialtyRepo, times(2)).deleteById(1L);
-		Mockito.verify(specialtyRepo, Mockito.atMost(3)).deleteById(1L);
-		Mockito.verify(specialtyRepo,  times(0)).delete(Mockito.any(Speciality.class));
+		//Mockito.verify(specialtyRepo, Mockito.atMost(3)).deleteById(1L);
+		//Mockito.verify(specialtyRepo,  times(0)).delete(Mockito.any(Speciality.class));
+		BDDMockito.then(specialtyRepo).should(atLeastOnce()).deleteById(1L);
+		BDDMockito.then(specialtyRepo).should(times(2)).deleteById(1L);
 	}
 
 }
