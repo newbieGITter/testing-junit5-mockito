@@ -54,7 +54,8 @@ public class VisitSDJpaServiceTest {
 		
 		Visit returnedVisit = service.findById(visitId);
 		
-		Mockito.verify(visitRepo, times(1)).findById(visitId);
+		//Mockito.verify(visitRepo, times(1)).findById(visitId);
+		BDDMockito.then(visitRepo).should(times(1)).findById(Mockito.anyLong());
 		assertThat(returnedVisit).isNotNull();
 	}
 	
@@ -66,7 +67,8 @@ public class VisitSDJpaServiceTest {
 		
 		Visit savedVisit = service.save(visit);
 		
-		Mockito.verify(visitRepo, times(1)).save(Mockito.any(Visit.class));
+		//Mockito.verify(visitRepo, times(1)).save(Mockito.any(Visit.class));
+		BDDMockito.then(visitRepo).should(times(1)).save(Mockito.any(Visit.class));
 		assertThat(savedVisit).isNotNull();
 	}
 	
@@ -86,6 +88,7 @@ public class VisitSDJpaServiceTest {
 		service.deleteById(visitId);
 		
 		Mockito.verify(visitRepo, times(1)).deleteById(visitId);
+		BDDMockito.then(visitRepo).should(times(1)).deleteById(visitId);
 	}
 
 }
