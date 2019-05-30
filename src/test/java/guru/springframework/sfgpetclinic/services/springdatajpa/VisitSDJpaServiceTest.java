@@ -1,6 +1,8 @@
 package guru.springframework.sfgpetclinic.services.springdatajpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 
 import java.util.HashSet;
@@ -89,6 +91,15 @@ public class VisitSDJpaServiceTest {
 		
 		Mockito.verify(visitRepo, times(1)).deleteById(visitId);
 		BDDMockito.then(visitRepo).should(times(1)).deleteById(visitId);
+	}
+	
+	@Test
+	void testDoThrow() {
+		doThrow(new RuntimeException("Some exception")).when(visitRepo).delete(Mockito.any());
+		
+		assertThrows(RuntimeException.class, () -> visitRepo.delete(new Visit()));
+		
+		BDDMockito.then(visitRepo).should(times(1)).delete(Mockito.any());
 	}
 
 }
